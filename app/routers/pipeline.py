@@ -9,7 +9,7 @@ from ..schemas import JobResponse, JobIdResponse
 
 router = APIRouter(prefix="/pipeline")
 
-@router.post("/", response_model=JobIdResponse)
+@router.post("/", response_model=JobIdResponse, status_code=201)
 async def create_pipeline(db: AsyncSession = Depends(get_db)):
     job = Job(status="pending")
     db.add(job)
@@ -35,7 +35,7 @@ async def create_pipeline(db: AsyncSession = Depends(get_db)):
         
         raise HTTPException(status_code=500, detail="Failed to create pipeline")
 
-@router.get("/{job_id}", response_model=JobResponse)
+@router.get("/{job_id}", response_model=JobResponse, status_code=200)
 async def get_job_status(job_id: str, db: AsyncSession = Depends(get_db)):
     try:
         job = await db.get(Job, job_id)
